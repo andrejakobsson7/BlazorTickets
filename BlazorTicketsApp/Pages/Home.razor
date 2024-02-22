@@ -9,7 +9,7 @@
 
 <h1 class="text-center text-success">Tickets!</h1>
 
-<input placeholder="Search by title" @bind-value="searchText" @bind-value:event="oninput" >
+<input placeholder="Search by title" @bind-value="searchText" @oninput="Search">
 
 
 <h1>Ticket!</h1>
@@ -72,7 +72,7 @@ else
 </EditForm> 
 
 @code {
-   
+
 
     private string searchText = "";
     private TicketModel ticketModel { get; set; } = new();
@@ -87,6 +87,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        
         allTickets = await ticketService.GetAllTicketsAsync();
         allTags = await tagService.GetAllTagsAsync();
         allResponses = await responseService.GetAllResponsesAsync();
@@ -101,12 +102,11 @@ else
 
     }
 
-    private async Task Search(string searchText)
+    private async Task Search(ChangeEventArgs e)
     {
-
-       allTickets = allTickets.Where(t => t.Title.ToLower().Contains(searchText.ToLower())).ToList();
-
-       
+        searchText = e.Value?.ToString() ?? "";
+        allTickets = await ticketService.GetAllTicketsAsync();
+        allTickets = allTickets.Where(t => t.Title.ToLower().Contains(searchText.ToLower())).ToList();
     }
 
 }
