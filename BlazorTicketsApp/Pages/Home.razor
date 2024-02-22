@@ -5,13 +5,13 @@
 @inject ITagService tagService
 @inject IResponseService responseService
 
-<PageTitle>Home</PageTi
+<PageTitle>Home</PageTitle>
 
 <h1 class="text-center text-success">Tickets!</h1>
 
 <input placeholder="Search by title" @bind-value="searchText" @bind-value:event="oninput" />
+<button @onclick="ClearText">Clear</button>
 
- 
 
 <h1>Ticket!</h1>
 
@@ -21,11 +21,23 @@
    <div class="row">
    @foreach (TicketModel ticket in allTickets)
    {
-    <div class="col-5">
-                <a href="/tickets/@ticket.Id"><h1>@ticket.Title</h1></a>
+    <div class="col-5 ticket-problem" >
+                <a href="/response/@ticket.Id"><h1>@ticket.Title</h1></a>
+                <h2 class="text-success"> Description: </h2>
                 <h2>@ticket.Description</h2>
-                <h3>@ticket.SubmittedBy</h3>
+                <h3 class="text-success"> Submitted by:</h3>
+                <h3> @ticket.SubmittedBy</h3>
+                <h4 class="text-success"> Is resolved: </h4>
                 <h4>@ticket.IsResolved</h4>
+               
+                @foreach(ResponseModel response in allResponses)
+                {
+                    <h2 class="text-danger">Response:</h2>
+                    <h2>@response.Response</h2>
+                    <h4 class="text-danger">Submitted by:</h4>
+                    <h4>@response.SubmittedBy</h4>
+                }
+               
     </div>
    }
     </div>
@@ -34,11 +46,6 @@ else
 {
     <h2>No tickets are found</h2>
 } 
-
-
-
-
-
 
 
 <EditForm Model="ticketModel" OnValidSubmit="HandleSubmit">
@@ -66,32 +73,36 @@ else
 </EditForm> 
 
 @code {
-
+    private bool isLoading;
 
     private string searchText = "";
-	private TicketModel ticketModel { get; set; } = new();
-	private Tag subject { get; set; }
-
     private TicketModel ticketModel { get; set; } = new();
     private Tag subject { get; set; }
 
 
-	private List<TicketModel> allTickets;
-	private List<TagModel> allTags;
-	private List<ResponseModel> allResponses;
-	
+
+    private List<TicketModel> allTickets;
+    private List<TagModel> allTags;
+    private List<ResponseModel> allResponses;
 
 
-	protected override async Task OnInitializedAsync()
-	{
-		allTickets = await ticketService.GetAllTicketsAsync();
-		allTags = await tagService.GetAllTagsAsync();
-		allResponses = await responseService.GetAllResponsesAsync();
-	}
+
+    protected override async Task OnInitializedAsync()
+    {
+        allTickets = await ticketService.GetAllTicketsAsync();
+        allTags = await tagService.GetAllTagsAsync();
+        allResponses = await responseService.GetAllResponsesAsync();
+    }
 
     public async Task HandleSubmit()
     {
+        isLoading = true;
+        await ticketService.AddTicketAsync(ticketModel);
+        isLoading = false;
     }
-
+    private void ClearText(MouseEventArgs e)
+    {
+        searchText = "";
+    }
 }
 

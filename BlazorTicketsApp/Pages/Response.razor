@@ -1,0 +1,44 @@
+﻿@page "/response/{id:int}"
+@using BlazorTicketsApp.Services
+@using Shared.Models
+@inject ITicketService ticketService
+@inject IResponseService responseService
+
+<h3>Would you like to responde?</h3>
+
+<div>
+
+	@if(ticket != null)
+	{
+		<h1>@ticket.Title</h1>
+		foreach(ResponseModel response in response)
+		{
+			<h2>@response.Response</h2>
+		}
+		
+	}
+	
+
+
+</div>
+
+
+
+@code {
+	[Parameter]
+	public int Id { get; set; }
+
+	private TicketModel? ticket;
+	private List<ResponseModel>? response;
+
+	protected override async Task OnParametersSetAsync()
+	{
+
+		ticket = await ticketService.GetTicketByIdAsync(Id);
+		response = await responseService.GetAllResponsesByTicketIdAsync(Id);
+	}
+
+
+
+
+}
