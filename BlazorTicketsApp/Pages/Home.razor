@@ -6,7 +6,7 @@
 @inject IResponseService responseService
 
 <PageTitle>Home</PageTitle>
-
+@* 
 <h1>Ticket!</h1>
 
 
@@ -54,12 +54,11 @@ else
             <option value="@tag">@tag</option>
         }
     </InputSelect>
-</EditForm>
+</EditForm> *@
 
 
 
 @code {
-
 
     private TicketModel ticketModel { get; set; } = new();
     private Tag subject { get; set; }
@@ -75,9 +74,14 @@ else
 	}
 
 
+
     private async Task HandleSubmit()
     {
        
+
+    public async Task HandleSubmit()
+    {
+
     }
 }
 
