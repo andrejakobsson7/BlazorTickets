@@ -1,10 +1,14 @@
-﻿@page "/"
-@using BlazorTicketsApp.Enum
-@using BlazorTicketsApp.Models
+@page "/"
+@using BlazorTicketsApp.Services
+@using Shared.Models
+@inject ITicketService ticketService
+@inject ITagService tagService
+@inject IResponseService responseService
 
 <PageTitle>Home</PageTitle>
 
 <h1>Ticket!</h1>
+
 
 <EditForm Model="newTicket" OnValidSubmit="HandleSubmit">
     <DataAnnotationsValidator />
@@ -32,19 +36,15 @@
 
 
 
-@code{
-
-    public TicketModel newTicket { get; set; } = new();
-    //public EnumTag enumTag { get; set; }
-
-
-    public async Task? HandleSubmit()
-    {
-
-        // dbContext.TicketModel.Add(newTicket);
-
-        // await dbcontext.SaveChangesAsync();
-
-    }
-
+@code {
+	private List<TicketModel> allTickets;
+	private List<TagModel> allTags;
+	private List<ResponseModel> allResponses;
+	protected override async Task OnInitializedAsync()
+	{
+		allTickets = await ticketService.GetAllTicketsAsync();
+		allTags = await tagService.GetAllTagsAsync();
+		allResponses = await responseService.GetAllResponsesAsync();
+	}
 }
+
