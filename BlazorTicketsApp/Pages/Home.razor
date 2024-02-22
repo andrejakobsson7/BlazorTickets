@@ -1,7 +1,50 @@
 ﻿@page "/"
+@using BlazorTicketsApp.Enum
+@using BlazorTicketsApp.Models
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Ticket!</h1>
 
-Welcome to your new app.
+<EditForm Model="newTicket" OnValidSubmit="HandleSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <InputText @bind-Value="newTicket.SubmittedBy" placeholder="Submitted by"></InputText>
+    <InputText @bind-Value="newTicket.Title" placeholder="Title"></InputText>
+    <InputText @bind-Value="newTicket.Description" placeholder="Description"></InputText>
+
+    <br />
+    <input class="btn btn-primary" type="submit" value="Submit">
+    <br />
+    <br />
+    <label>Solved?</label>
+    <br />
+    <InputCheckbox @bind-Value="newTicket.IsResolved"/>
+    <h6>Subject</h6>
+    <InputSelect @bind-Value="newTicket.TicketTags" placeholder="Subject" >
+        @foreach (var tag in Enum.GetValues(typeof(EnumTag)))
+        {
+            <option value="@tag">@tag</option>
+        }
+    </InputSelect>
+</EditForm>
+
+
+
+@code{
+
+    public TicketModel newTicket { get; set; } = new();
+    //public EnumTag enumTag { get; set; }
+
+
+    public async Task? HandleSubmit()
+    {
+
+        // dbContext.TicketModel.Add(newTicket);
+
+        // await dbcontext.SaveChangesAsync();
+
+    }
+
+}
