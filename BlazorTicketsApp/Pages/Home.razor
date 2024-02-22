@@ -6,7 +6,7 @@
 @inject IResponseService responseService
 
 <PageTitle>Home</PageTitle>
-
+@* 
 <h1>Ticket!</h1>
 
 
@@ -32,19 +32,19 @@
             <option value="@tag">@tag</option>
         }
     </InputSelect>
-</EditForm>
+</EditForm> *@
 
 
 
 @code {
-	private List<TicketModel> allTickets;
-	private List<TagModel> allTags;
-	private List<ResponseModel> allResponses;
-	protected override async Task OnInitializedAsync()
-	{
-		allTickets = await ticketService.GetAllTicketsAsync();
-		allTags = await tagService.GetAllTagsAsync();
-		allResponses = await responseService.GetAllResponsesAsync();
-	}
+    private TagModel newTag;
+    protected override async Task OnInitializedAsync()
+    {
+        newTag = new()
+            {
+                Name = "C#"
+            };
+            bool isSuccessfullyUpdated = await tagService.AddTagAsync(newTag);
+    }
 }
 

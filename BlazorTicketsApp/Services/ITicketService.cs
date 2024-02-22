@@ -2,9 +2,12 @@
 
 namespace BlazorTicketsApp.Services
 {
-	public interface ITicketService
-	{
-		public HttpClient Client { get; set; }
-		public Task<List<TicketModel>> GetAllTicketsAsync();
-	}
+    public interface ITicketService
+    {
+        public HttpClient Client { get; set; }
+        public Task<List<TicketModel>> GetAllTicketsAsync();
+        public Task<TicketModel> GetTicketByIdAsync(int id);
+        public Task<bool> AddTicketAsync(TicketModel ticket);
+
+    }
 }
