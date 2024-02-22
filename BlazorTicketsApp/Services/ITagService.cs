@@ -2,9 +2,11 @@
 
 namespace BlazorTicketsApp.Services
 {
-	public interface ITagService
-	{
-		public HttpClient Client { get; set; }
-		public Task<List<TagModel>> GetAllTagsAsync();
-	}
+    public interface ITagService
+    {
+        public HttpClient Client { get; set; }
+        public Task<List<TagModel>> GetAllTagsAsync();
+
+        public Task<bool> AddTagAsync(TagModel tag);
+    }
 }
