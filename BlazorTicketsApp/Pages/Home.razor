@@ -5,9 +5,16 @@
 @inject ITagService tagService
 @inject IResponseService responseService
 
-<PageTitle>Home</PageTitle>
-@* 
+<PageTitle>Home</PageTi
+
+<h1 class="text-center text-success">Tickets!</h1>
+
+<input placeholder="Search by title" @bind-value="searchText" @bind-value:event="oninput" />
+
+ 
+
 <h1>Ticket!</h1>
+
 
 @if(allTickets != null)
 {
@@ -26,7 +33,9 @@
 else
 {
     <h2>No tickets are found</h2>
-}
+} 
+
+
 
 
 
@@ -54,11 +63,14 @@ else
             <option value="@tag">@tag</option>
         }
     </InputSelect>
-</EditForm> *@
-
-
+</EditForm> 
 
 @code {
+
+
+    private string searchText = "";
+	private TicketModel ticketModel { get; set; } = new();
+	private Tag subject { get; set; }
 
     private TicketModel ticketModel { get; set; } = new();
     private Tag subject { get; set; }
@@ -67,14 +79,19 @@ else
 	private List<TicketModel> allTickets;
 	private List<TagModel> allTags;
 	private List<ResponseModel> allResponses;
+	
+
+
 	protected override async Task OnInitializedAsync()
 	{
 		allTickets = await ticketService.GetAllTicketsAsync();
 		allTags = await tagService.GetAllTagsAsync();
 		allResponses = await responseService.GetAllResponsesAsync();
 	}
+
     public async Task HandleSubmit()
     {
     }
+
 }
 
