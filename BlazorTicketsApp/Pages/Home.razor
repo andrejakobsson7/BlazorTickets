@@ -5,11 +5,11 @@
 @inject ITagService tagService
 @inject IResponseService responseService
 
-<PageTitle>Home</PageTi
+<PageTitle>Home</PageTitle>
 
 <h1 class="text-center text-success">Tickets!</h1>
 
-<input placeholder="Search by title" @bind-value="searchText" @bind-value:event="oninput" />
+<input placeholder="Search by title" @bind-value="searchText" @bind-value:event="oninput" >
 
  
 
@@ -69,29 +69,37 @@ else
 
 
     private string searchText = "";
-	private TicketModel ticketModel { get; set; } = new();
-	private Tag subject { get; set; }
-
     private TicketModel ticketModel { get; set; } = new();
     private Tag subject { get; set; }
 
+    private List<TicketModel> allTickets;
+    private List<TagModel> allTags;
+    private List<ResponseModel> allResponses;
 
-	private List<TicketModel> allTickets;
-	private List<TagModel> allTags;
-	private List<ResponseModel> allResponses;
-	
+    private bool isLoading;
 
-
-	protected override async Task OnInitializedAsync()
-	{
-		allTickets = await ticketService.GetAllTicketsAsync();
-		allTags = await tagService.GetAllTagsAsync();
-		allResponses = await responseService.GetAllResponsesAsync();
-	}
-
-    public async Task HandleSubmit()
+    protected override async Task OnInitializedAsync()
     {
+        allTickets = await ticketService.GetAllTicketsAsync();
+        allTags = await tagService.GetAllTagsAsync();
+        allResponses = await responseService.GetAllResponsesAsync();
+
+    }
+
+    private async Task HandleSubmit()
+    {
+        isLoading = true;
+        await ticketService.AddTicketAsync(ticketModel);
+        isLoading = false;
+
+    }
+
+    private async Task Search(string searchText)
+    {
+
+       allTickets = allTickets.Where(t => t.Title.ToLower().Contains(searchText.ToLower())).ToList();
+
+       
     }
 
 }
-
