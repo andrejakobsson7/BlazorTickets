@@ -9,8 +9,7 @@
 
 <h1 class="text-center text-success">Tickets!</h1>
 
-<input placeholder="Search by title" @bind-value="searchText" @bind-value:event="oninput" />
-<button @onclick="ClearText">Clear</button>
+<input placeholder="Search by title" @bind-value="searchText" @bind-value:event="oninput" >
 
 
 <h1>Ticket!</h1>
@@ -73,36 +72,41 @@ else
 </EditForm> 
 
 @code {
-    private bool isLoading;
+   
 
     private string searchText = "";
     private TicketModel ticketModel { get; set; } = new();
     private Tag subject { get; set; }
-
-
 
     private List<TicketModel> allTickets;
     private List<TagModel> allTags;
     private List<ResponseModel> allResponses;
 
 
+    private bool isLoading;
 
     protected override async Task OnInitializedAsync()
     {
         allTickets = await ticketService.GetAllTicketsAsync();
         allTags = await tagService.GetAllTagsAsync();
         allResponses = await responseService.GetAllResponsesAsync();
+
     }
 
-    public async Task HandleSubmit()
+    private async Task HandleSubmit()
     {
         isLoading = true;
         await ticketService.AddTicketAsync(ticketModel);
         isLoading = false;
-    }
-    private void ClearText(MouseEventArgs e)
-    {
-        searchText = "";
-    }
-}
 
+    }
+
+    private async Task Search(string searchText)
+    {
+
+       allTickets = allTickets.Where(t => t.Title.ToLower().Contains(searchText.ToLower())).ToList();
+
+       
+    }
+
+}
