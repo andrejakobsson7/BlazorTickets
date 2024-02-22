@@ -9,6 +9,8 @@
 
 <h1>Ticket!</h1>
 
+
+
 @if(allTickets != null)
 {
    <div class="row">
@@ -27,8 +29,6 @@ else
 {
     <h2>No tickets are found</h2>
 }
-
-
 
 
 
@@ -64,7 +64,6 @@ else
     private TicketModel ticketModel { get; set; } = new();
     private Tag subject { get; set; }
 
-
 	private List<TicketModel> allTickets;
 	private List<TagModel> allTags;
 	private List<ResponseModel> allResponses;
@@ -74,9 +73,11 @@ else
 		allTags = await tagService.GetAllTagsAsync();
 		allResponses = await responseService.GetAllResponsesAsync();
 	}
-    public async Task HandleSubmit()
-    {
 
+
+    private async Task HandleSubmit()
+    {
+       
     }
 }
 
