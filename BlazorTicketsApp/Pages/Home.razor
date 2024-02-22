@@ -9,7 +9,7 @@
 
 <h1 class="text-center text-success">Tickets!</h1>
 
-<input placeholder="Search by title" @bind-value="searchText" @bind-value:event="oninput" >
+<input placeholder="Search by title" @bind="searchText" @bind:event="oninput" />
 
 
 <h1>Ticket!</h1>
@@ -18,7 +18,7 @@
 @if(allTickets != null)
 {
    <div class="row">
-   @foreach (TicketModel ticket in allTickets)
+        @foreach (TicketModel ticket in FilteredTickets)
    {
     <div class="col-5 ticket-problem" >
                 <a href="/response/@ticket.Id"><h1>@ticket.Title</h1></a>
@@ -28,8 +28,8 @@
                 <h3> @ticket.SubmittedBy</h3>
                 <h4 class="text-success"> Is resolved: </h4>
                 <h4>@ticket.IsResolved</h4>
-               
-                @foreach(ResponseModel response in allResponses)
+
+                @foreach (ResponseModel response in allResponses.Where(r => r.TicketId == ticket.Id))
                 {
                     <h2 class="text-danger">Response:</h2>
                     <h2>@response.Response</h2>
@@ -79,8 +79,12 @@ else
     private Tag subject { get; set; }
 
     private List<TicketModel> allTickets;
+    private List<TicketModel> filteredTickets;
     private List<TagModel> allTags;
     private List<ResponseModel> allResponses;
+
+
+    List<TicketModel> FilteredTickets => allTickets.Where(t => t.Title.ToLower().Contains(searchText.ToLower())).ToList();
 
 
     private bool isLoading;
@@ -99,14 +103,6 @@ else
         await ticketService.AddTicketAsync(ticketModel);
         isLoading = false;
 
-    }
-
-    private async Task Search(string searchText)
-    {
-
-       allTickets = allTickets.Where(t => t.Title.ToLower().Contains(searchText.ToLower())).ToList();
-
-       
     }
 
 }
