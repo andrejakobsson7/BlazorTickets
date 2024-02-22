@@ -28,14 +28,29 @@ namespace BlazorTicketsApp.Services
             throw new HttpRequestException();
         }
 
-        public async Task<bool> AddTagAsync(TagModel newTag)
+        public async Task<TagModel?> AddTagAsync(TagModel newTag)
         {
             var apiResponse = await Client.PostAsJsonAsync<TagModel>(Client.BaseAddress, newTag);
             if (apiResponse.IsSuccessStatusCode)
             {
-                return true;
+                string newTagJson = await apiResponse.Content.ReadAsStringAsync();
+                TagModel? addedTag = JsonConvert.DeserializeObject<TagModel>(newTagJson);
+                return addedTag;
             }
-            return false;
+            return null;
         }
+
+        public async Task<TagModel?> GetTagByNameAsync(string name)
+        {
+            var apiResponse = await Client.GetAsync(name);
+            if (apiResponse.IsSuccessStatusCode)
+            {
+                string tagJson = await apiResponse.Content.ReadAsStringAsync();
+                TagModel? tag = JsonConvert.DeserializeObject<TagModel>(tagJson);
+                return tag;
+            }
+            return null;
+        }
+
     }
 }

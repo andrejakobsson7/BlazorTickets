@@ -13,23 +13,23 @@ namespace BlazorTicketsApi.Repositories
         }
         public async Task<List<TicketModel>> GetAllTicketsAsync()
         {
-            return await _context.Tickets.OrderBy(t => t.Title).ToListAsync();
+            return await _context.Tickets.Include(t => t.Responses).OrderBy(t => t.Title).ToListAsync();
         }
         public async Task<TicketModel?> GetTicketByIdAsync(int id)
         {
-            return await _context.Tickets.FirstOrDefaultAsync(t => t.Id == id);
+            return await _context.Tickets.Include(t => t.Responses).FirstOrDefaultAsync(t => t.Id == id);
         }
-        public async Task<bool> AddTicketAsync(TicketModel ticket)
+        public async Task<TicketModel> AddTicketAsync(TicketModel ticket)
         {
             try
             {
-                await _context.Tickets.AddAsync(ticket);
+                var newTicket = await _context.Tickets.AddAsync(ticket);
                 await _context.SaveChangesAsync();
-                return true;
+                return newTicket.Entity;
             }
             catch (Exception)
             {
-                return false;
+                return null;
             }
         }
         public async Task<bool> RemoveTicketAsync(int id)

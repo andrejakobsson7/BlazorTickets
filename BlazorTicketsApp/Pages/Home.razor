@@ -4,6 +4,7 @@
 @inject ITicketService ticketService
 @inject ITagService tagService
 @inject IResponseService responseService
+@inject ITicketTagService ticketTagService
 
 <PageTitle>Home</PageTitle>
 
@@ -72,7 +73,7 @@ else
 </EditForm> 
 
 @code {
-   
+
 
     private string searchText = "";
     private TicketModel ticketModel { get; set; } = new();
@@ -96,7 +97,31 @@ else
     private async Task HandleSubmit()
     {
         isLoading = true;
-        await ticketService.AddTicketAsync(ticketModel);
+        //Försök skapa en ny ticket.
+        TicketModel newTicket = await ticketService.AddTicketAsync(ticketModel);
+        if (newTicket != null)
+        {
+            //Kolla om tag finns med detta namn i databasen
+            TagModel? selectedTag = await tagService.GetTagByNameAsync(subject.ToString());
+            //Om inte, skapa den och returnera den nya tagen.
+            if(selectedTag == null)
+            {
+                selectedTag = await tagService.AddTagAsync(new TagModel()
+                    {
+                        Name = subject.ToString()
+                    });
+            }
+            //Om tag redan finns, använd befintligt ID.
+
+            //Skapa en ticket tag
+            TicketTag newTicketTag = new()
+                {
+                    TicketId = newTicket.Id,
+                    TagId = selectedTag.Id,
+                };
+            //Lägg sedan till i TicketTag
+            TicketTag? addedTicketTag = await ticketTagService.AddTicketTagAsync(newTicketTag);
+        }
         isLoading = false;
 
     }

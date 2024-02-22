@@ -7,7 +7,6 @@ namespace BlazorTicketsApp.Services
         public HttpClient Client { get; set; }
         public Task<List<ResponseModel>> GetAllResponsesAsync();
         public Task<List<ResponseModel>> GetAllResponsesByTicketIdAsync(int ticketId);
-        public Task<bool> AddResponseAsync(ResponseModel response);
-
+        public Task<ResponseModel?> AddResponseAsync(ResponseModel response);
     }
 }

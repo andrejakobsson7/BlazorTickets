@@ -1,6 +1,8 @@
 ﻿using BlazorTicketsApi.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Models;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace BlazorTicketsApi.Controllers
 {
@@ -9,6 +11,10 @@ namespace BlazorTicketsApi.Controllers
     public class ResponseController : ControllerBase
     {
         private readonly IResponseRepository _responseRepository;
+        private JsonSerializerOptions _jsonSerializerOptions = new()
+        {
+            ReferenceHandler = ReferenceHandler.Preserve
+        };
 
         public ResponseController(IResponseRepository responseRepository)
         {
@@ -25,7 +31,8 @@ namespace BlazorTicketsApi.Controllers
             }
             else
             {
-                return Ok(allResponses);
+                var responsesJson = JsonSerializer.Serialize(allResponses, _jsonSerializerOptions);
+                return Ok(responsesJson);
             }
         }
 
@@ -39,19 +46,22 @@ namespace BlazorTicketsApi.Controllers
             }
             else
             {
-                return Ok(allResponses);
+                var responsesJson = JsonSerializer.Serialize(allResponses, _jsonSerializerOptions);
+                return Ok(responsesJson);
             }
         }
 
         [HttpPost]
         public async Task<IActionResult> AddResponseAsync(ResponseModel response)
         {
-            bool isSuccesfullyAdded = await _responseRepository.AddResponseAsync(response);
-            if (isSuccesfullyAdded)
+            ResponseModel? newResponse = await _responseRepository.AddResponseAsync(response);
+            if (newResponse == null)
             {
-                return Ok();
+                return BadRequest();
             }
-            return BadRequest();
+            var responsesJson = JsonSerializer.Serialize(newResponse, _jsonSerializerOptions);
+            return Ok(responsesJson);
+
         }
 
         [HttpDelete("{id}")]
