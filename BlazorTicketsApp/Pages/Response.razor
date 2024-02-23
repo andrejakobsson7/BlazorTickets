@@ -25,6 +25,8 @@
 			<h2>Response: @response.Response</h2>	
 
 		}
+		<label>Issue resolved?</label>
+		<InputCheckbox>@ticket.IsResolved</InputCheckbox>
 
 	}
 	
@@ -36,8 +38,8 @@
 
 	<InputText @bind-Value="NewResponse.Response" placeholder="Response"></InputText>
 	<InputText @bind-Value="NewResponse.SubmittedBy" placeholder="Your name"></InputText>
-
-	<input class="btn btn-primary" type="submit" value="Submit">
+	<ButtonSubmit Title="Submit"></ButtonSubmit>
+	<!-- <input class="btn btn-primary" type="submit" value="Submit">-->
 </EditForm>
 
 @code {
@@ -59,14 +61,14 @@
 
 	private async Task HandleSubmit()
 	{
-		await responseService.AddResponseAsync(NewResponse);
-		response = await responseService.GetAllResponsesByTicketIdAsync(Id);
+		if(NewResponse != null)
+		{
+			await responseService.AddResponseAsync(NewResponse);
+			response = await responseService.GetAllResponsesByTicketIdAsync(Id);
+			NewResponse = new ResponseModel(); // Clear the form after submission
+		}
 
-		NewResponse = new ResponseModel(); // Clear the form after submission
 	}
 
 }
-
-
-
 

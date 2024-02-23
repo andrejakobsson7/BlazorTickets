@@ -26,9 +26,7 @@
     <input class="btn btn-primary" type="submit" value="Submit">
     <br />
     <br />
-    <label>Solved?</label>
-    <br />
-    <InputCheckbox @bind-Value="ticketModel.IsResolved" />
+
     <br />
     <h6>Subject</h6>
     <InputSelect @bind-Value="subject" placeholder="Subject">
@@ -56,6 +54,7 @@
                     <h3> @ticket.SubmittedBy</h3>
                     <h4 class="text-success"> Is resolved: </h4>
                     <h4>@ticket.IsResolved</h4>
+                    <InputCheckbox @bind-Value="ticketModel.IsResolved" />
 
                     @foreach (ResponseModel response in allResponses.Where(r => r.TicketId == ticket.Id)) // Ändra så det bara är response
                     {
@@ -68,6 +67,7 @@
         </div>
  
         }
+
         </div>
  @*    </div> *@
     
