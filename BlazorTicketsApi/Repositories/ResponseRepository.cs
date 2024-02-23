@@ -23,19 +23,19 @@ namespace BlazorTicketsApi.Repositories
         }
         public async Task<List<ResponseModel>?> GetAllResponsesByTicketIdAsync(int ticketId)
         {
-            return await _context.Responses.Where(r => r.TicketId == ticketId).ToListAsync();
+            return await _context.Responses.Include(r => r.Ticket).Where(r => r.TicketId == ticketId).ToListAsync();
         }
-        public async Task<bool> AddResponseAsync(ResponseModel response)
+        public async Task<ResponseModel?> AddResponseAsync(ResponseModel response)
         {
             try
             {
-                await _context.Responses.AddAsync(response);
+                var newResponse = await _context.Responses.AddAsync(response);
                 await _context.SaveChangesAsync();
-                return true;
+                return newResponse.Entity;
             }
             catch (Exception)
             {
-                return false;
+                return null;
             }
 
 

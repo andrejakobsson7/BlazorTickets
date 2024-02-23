@@ -1,6 +1,8 @@
 ﻿using BlazorTicketsApi.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Models;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace BlazorTicketsApi.Controllers
 {
@@ -9,6 +11,10 @@ namespace BlazorTicketsApi.Controllers
     public class TicketController : ControllerBase
     {
         private readonly ITicketRepository _ticketRepository;
+        private JsonSerializerOptions _jsonSerializerOptions = new()
+        {
+            ReferenceHandler = ReferenceHandler.Preserve
+        };
 
         public TicketController(ITicketRepository ticketRepository)
         {
@@ -25,7 +31,8 @@ namespace BlazorTicketsApi.Controllers
             }
             else
             {
-                return Ok(allTickets);
+                var ticketsJson = JsonSerializer.Serialize(allTickets, _jsonSerializerOptions);
+                return Ok(ticketsJson);
             }
         }
 
@@ -40,19 +47,24 @@ namespace BlazorTicketsApi.Controllers
             }
             else
             {
-                return Ok(ticket);
+                var ticketJson = JsonSerializer.Serialize(ticket, _jsonSerializerOptions);
+                return Ok(ticketJson);
             }
         }
 
         [HttpPost]
         public async Task<IActionResult> AddTicketAsync(TicketModel ticket)
         {
-            bool isSuccesfullyAdded = await _ticketRepository.AddTicketAsync(ticket);
-            if (isSuccesfullyAdded)
+            TicketModel newTicket = await _ticketRepository.AddTicketAsync(ticket);
+            if (newTicket == null)
             {
-                return Ok();
+                return BadRequest();
             }
-            return BadRequest();
+            else
+            {
+                var ticketJson = JsonSerializer.Serialize(newTicket, _jsonSerializerOptions);
+                return Ok(ticketJson);
+            }
         }
 
         [HttpDelete("{id}")]

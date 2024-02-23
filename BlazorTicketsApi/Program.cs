@@ -17,25 +17,26 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(blaz
 
 builder.Services.AddCors(options =>
 {
-	options.AddPolicy("AllowAll", options =>
-	{
-		options.AllowAnyHeader();
-		options.AllowAnyMethod();
-		options.AllowAnyOrigin();
-	});
+    options.AddPolicy("AllowAll", options =>
+    {
+        options.AllowAnyHeader();
+        options.AllowAnyMethod();
+        options.AllowAnyOrigin();
+    });
 });
 
 builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 builder.Services.AddScoped<ITagRepository, TagRepository>();
 builder.Services.AddScoped<IResponseRepository, ResponseRepository>();
+builder.Services.AddScoped<ITicketTagRepository, TicketTagRepository>();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-	app.UseSwagger();
-	app.UseSwaggerUI();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
