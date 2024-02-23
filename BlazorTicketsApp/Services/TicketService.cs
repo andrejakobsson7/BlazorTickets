@@ -30,6 +30,7 @@ namespace BlazorTicketsApp.Services
 
         public async Task<TicketModel> GetTicketByIdAsync(int id)
         {
+
             var response = await Client.GetAsync($"{id}");
             if (response.IsSuccessStatusCode)
             {
@@ -44,14 +45,16 @@ namespace BlazorTicketsApp.Services
             throw new HttpRequestException();
         }
 
-        public async Task<bool> AddTicketAsync(TicketModel ticket)
+        public async Task<TicketModel?> AddTicketAsync(TicketModel ticket)
         {
             var response = await Client.PostAsJsonAsync<TicketModel>(Client.BaseAddress, ticket);
             if (response.IsSuccessStatusCode)
             {
-                return true;
+                string newTicketJson = await response.Content.ReadAsStringAsync();
+                TicketModel? newTicket = JsonConvert.DeserializeObject<TicketModel>(newTicketJson);
+                return newTicket;
             }
-            return false;
+            return null;
         }
 
     }

@@ -4,12 +4,15 @@
 @inject ITicketService ticketService
 @inject ITagService tagService
 @inject IResponseService responseService
+@inject ITicketTagService ticketTagService
 
 <PageTitle>Home</PageTitle>
 
 <h1 class="text-center text-success">Tickets!</h1>
 
+
 <input placeholder="Search by title" @bind-value="searchText" @oninput="Search">
+
 
 
 <h1>Ticket!</h1>
@@ -18,7 +21,7 @@
 @if(allTickets != null)
 {
    <div class="row">
-   @foreach (TicketModel ticket in allTickets)
+        @foreach (TicketModel ticket in FilteredTickets)
    {
     <div class="col-5 ticket-problem" >
                 <a href="/response/@ticket.Id"><h1>@ticket.Title</h1></a>
@@ -28,8 +31,8 @@
                 <h3> @ticket.SubmittedBy</h3>
                 <h4 class="text-success"> Is resolved: </h4>
                 <h4>@ticket.IsResolved</h4>
-               
-                @foreach(ResponseModel response in allResponses)
+
+                @foreach (ResponseModel response in allResponses.Where(r => r.TicketId == ticket.Id))
                 {
                     <h2 class="text-danger">Response:</h2>
                     <h2>@response.Response</h2>
@@ -79,8 +82,12 @@ else
     private Tag subject { get; set; }
 
     private List<TicketModel> allTickets;
+    private List<TicketModel> filteredTickets;
     private List<TagModel> allTags;
     private List<ResponseModel> allResponses;
+
+
+    List<TicketModel> FilteredTickets => allTickets.Where(t => t.Title.ToLower().Contains(searchText.ToLower())).ToList();
 
 
     private bool isLoading;
@@ -97,10 +104,35 @@ else
     private async Task HandleSubmit()
     {
         isLoading = true;
-        await ticketService.AddTicketAsync(ticketModel);
+        //Försök skapa en ny ticket.
+        TicketModel newTicket = await ticketService.AddTicketAsync(ticketModel);
+        if (newTicket != null)
+        {
+            //Kolla om tag finns med detta namn i databasen
+            TagModel? selectedTag = await tagService.GetTagByNameAsync(subject.ToString());
+            //Om inte, skapa den och returnera den nya tagen.
+            if(selectedTag == null)
+            {
+                selectedTag = await tagService.AddTagAsync(new TagModel()
+                    {
+                        Name = subject.ToString()
+                    });
+            }
+            //Om tag redan finns, använd befintligt ID.
+
+            //Skapa en ticket tag
+            TicketTag newTicketTag = new()
+                {
+                    TicketId = newTicket.Id,
+                    TagId = selectedTag.Id,
+                };
+            //Lägg sedan till i TicketTag
+            TicketTag? addedTicketTag = await ticketTagService.AddTicketTagAsync(newTicketTag);
+        }
         isLoading = false;
 
     }
+
 
     private async Task Search(ChangeEventArgs e)
     {
@@ -108,5 +140,6 @@ else
         allTickets = await ticketService.GetAllTicketsAsync();
         allTickets = allTickets.Where(t => t.Title.ToLower().Contains(searchText.ToLower())).ToList();
     }
+
 
 }

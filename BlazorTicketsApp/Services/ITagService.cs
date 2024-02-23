@@ -6,7 +6,7 @@ namespace BlazorTicketsApp.Services
     {
         public HttpClient Client { get; set; }
         public Task<List<TagModel>> GetAllTagsAsync();
-
-        public Task<bool> AddTagAsync(TagModel tag);
+        public Task<TagModel?> GetTagByNameAsync(string name);
+        public Task<TagModel?> AddTagAsync(TagModel tag);
     }
 }
