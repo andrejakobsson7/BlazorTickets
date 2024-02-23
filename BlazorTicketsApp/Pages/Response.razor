@@ -17,20 +17,25 @@
 		<h3> @ticket.SubmittedBy</h3>
 		foreach(ResponseModel response in response)
 		{
-			<h2>@response.Response</h2>	
+			<br />
+			<h2>Submitted by: @response.SubmittedBy</h2>	
+			<h2>Response: @response.Response</h2>	
+
 		}
 
 	}
+
 </div>
 
-<EditForm Model="newResponse" OnValidSubmit="HandleSubmit">
-	<InputText @bind-Value="newResponse.Response" placeholder="Respond"></InputText>
-	<InputText @bind-Value="newResponse.SubmittedBy" placeholder="Submitted by"></InputText>
+<EditForm Model="NewResponse" OnValidSubmit="HandleSubmit">
+	<DataAnnotationsValidator />
+	<ValidationSummary />
+
+	<InputText @bind-Value="NewResponse.Response" placeholder="Respond"></InputText>
+	<InputText @bind-Value="NewResponse.SubmittedBy" placeholder="Your name"></InputText>
+
 	<input class="btn btn-primary" type="submit" value="Submit">
 </EditForm>
-
-
-
 
 @code {
 
@@ -39,24 +44,21 @@
 
 	private TicketModel? ticket;
 	private List<ResponseModel>? response;
-	private ResponseModel newResponse { get; set; } = new();
-
-
+	private ResponseModel NewResponse { get; set; } = new();
+	private ResponseModel responseModel;
 
 	protected override async Task OnParametersSetAsync()
 	{
 		ticket = await ticketService.GetTicketByIdAsync(Id);
 		response = await responseService.GetAllResponsesByTicketIdAsync(Id);
+		NewResponse.TicketId = Id;
 	}
-
-	
 
 	private async Task HandleSubmit()
 	{
-		await responseService.AddResponseAsync(newResponse);
+		await responseService.AddResponseAsync(NewResponse);
 		response = await responseService.GetAllResponsesByTicketIdAsync(Id);
-		StateHasChanged();
-		newResponse = new ResponseModel(); // Clear the form after submission
+		NewResponse = new ResponseModel(); // Clear the form after submission
 	}
 
 	}
