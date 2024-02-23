@@ -14,10 +14,7 @@
 		foreach(ResponseModel response in response)
 		{
 			<h2>@response.Response</h2>
-
-		
 		}
-		
 	}
 	
 </div>
@@ -52,17 +49,9 @@
 		NewResponse.TicketId = Id;
 	}
 
-
-
 	private async Task HandleSubmit()
 	{
-
 		await responseService.AddResponseAsync(NewResponse);
 		response = await responseService.GetAllResponsesByTicketIdAsync(Id);
-
-		
      }
-
-
-
 }
