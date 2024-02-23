@@ -13,7 +13,9 @@
 		<h1>@ticket.Title</h1>
 		foreach(ResponseModel response in response)
 		{
-			<h2>@response.Response</h2>
+			<br />
+			<h2>Submitted by: @response.SubmittedBy</h2>
+			<h2>Response: @response.Response</h2>
 		}
 	}
 	
@@ -55,4 +57,4 @@
 		await responseService.AddResponseAsync(NewResponse);
 		response = await responseService.GetAllResponsesByTicketIdAsync(Id);
      }
-
+}
