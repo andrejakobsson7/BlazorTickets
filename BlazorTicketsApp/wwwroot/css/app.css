@@ -102,7 +102,19 @@ code {
     color: #c02d76;
 }
 
+#container
+{
+    display: flex;
+    justify-content: center;
+    align-content: space-between;
+    padding: 5px;
+}
+
 .ticket-problem {
-    background-color: indianred;
-    border: 3px dotted green;
+    background: rgb(255,255,255);
+    background: linear-gradient(0deg, rgba(255,255,255,0.7035189075630253) 44%, rgba(118,190,185,1) 85%);
+    padding: 10px;
+    border-style: solid;
+    border-radius: 3px;
+    border-color: dimgrey;
 }
