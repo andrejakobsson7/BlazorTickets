@@ -15,39 +15,6 @@
 
 <h1>Ticket!</h1>
 
-
-@if(allTickets != null)
-{
-   <div class="row">
-        @foreach (TicketModel ticket in FilteredTickets)
-   {
-    <div class="col-5 ticket-problem" >
-                <a href="/response/@ticket.Id"><h1>@ticket.Title</h1></a>
-                <h2 class="text-success"> Description: </h2>
-                <h2>@ticket.Description</h2>
-                <h3 class="text-success"> Submitted by:</h3>
-                <h3> @ticket.SubmittedBy</h3>
-                <h4 class="text-success"> Is resolved: </h4>
-                <h4>@ticket.IsResolved</h4>
-
-                @foreach (ResponseModel response in allResponses.Where(r => r.TicketId == ticket.Id))
-                {
-                    <h2 class="text-danger">Response:</h2>
-                    <h2>@response.Response</h2>
-                    <h4 class="text-danger">Submitted by:</h4>
-                    <h4>@response.SubmittedBy</h4>
-                }
-               
-    </div>
-   }
-    </div>
-}
-else
-{
-    <h2>No tickets are found</h2>
-} 
-
-
 <EditForm Model="ticketModel" OnValidSubmit="HandleSubmit">
     <DataAnnotationsValidator />
     <ValidationSummary />
@@ -63,6 +30,7 @@ else
     <label>Solved?</label>
     <br />
     <InputCheckbox @bind-Value="ticketModel.IsResolved" />
+    <br />
     <h6>Subject</h6>
     <InputSelect @bind-Value="subject" placeholder="Subject">
         @foreach (var tag in Enum.GetValues(typeof(Tag)))
@@ -70,7 +38,45 @@ else
             <option value="@tag">@tag</option>
         }
     </InputSelect>
-</EditForm> 
+   
+</EditForm>
+
+
+@if(allTickets != null)
+{
+  @*   <div class="container"> *@
+    <div class="row">
+            @foreach (TicketModel ticket in FilteredTickets)
+       {
+           <div id="container">
+            <div class="ticket-problem">
+                    <a href="/response/@ticket.Id"><h1>@ticket.Title</h1></a>
+                    <h2 class="text-success"> Description: </h2>
+                    <h2>@ticket.Description</h2>
+                    <h3 class="text-success"> Submitted by:</h3>
+                    <h3> @ticket.SubmittedBy</h3>
+                    <h4 class="text-success"> Is resolved: </h4>
+                    <h4>@ticket.IsResolved</h4>
+
+                    @foreach (ResponseModel response in allResponses.Where(r => r.TicketId == ticket.Id)) // Ändra så det bara är response
+                    {
+                        <h2 class="text-danger">Response:</h2>
+                        <h2>@response.Response</h2>
+                        <h4 class="text-danger">Submitted by:</h4>
+                        <h4>@response.SubmittedBy</h4>
+                    }
+              </div> 
+        </div>
+ 
+        }
+        </div>
+ @*    </div> *@
+    
+}
+else
+{
+    <h2>No tickets are found</h2>
+} 
 
 @code {
 

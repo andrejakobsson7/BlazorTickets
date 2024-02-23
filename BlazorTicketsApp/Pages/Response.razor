@@ -1,4 +1,4 @@
-﻿@page "/response/{id:int}"
+@page "/response/{id:int}"
 @using BlazorTicketsApp.Services
 @using Shared.Models
 @inject ITicketService ticketService
@@ -24,7 +24,7 @@
 	<DataAnnotationsValidator />
 	<ValidationSummary />
 
-	<InputText @bind-Value="NewResponse.Response" placeholder="Respond"></InputText>
+	<InputText @bind-Value="NewResponse.Response" placeholder="Response"></InputText>
 	<InputText @bind-Value="NewResponse.SubmittedBy" placeholder="Your name"></InputText>
 
 	<input class="btn btn-primary" type="submit" value="Submit">
@@ -49,9 +49,10 @@
 		NewResponse.TicketId = Id;
 	}
 
+
 	private async Task HandleSubmit()
 	{
 		await responseService.AddResponseAsync(NewResponse);
 		response = await responseService.GetAllResponsesByTicketIdAsync(Id);
      }
-}
+
