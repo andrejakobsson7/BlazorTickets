@@ -12,7 +12,6 @@
 
 <input placeholder="Search by title" @bind="searchText" @bind:event="oninput" />
 
-
 <h1>Ticket!</h1>
 
 <EditForm Model="ticketModel" OnValidSubmit="HandleSubmit">
@@ -27,9 +26,7 @@
     <input class="btn btn-primary" type="submit" value="Submit">
     <br />
     <br />
-    <label>Solved?</label>
-    <br />
-    <InputCheckbox @bind-Value="ticketModel.IsResolved" />
+
     <br />
     <h6>Subject</h6>
     <InputSelect @bind-Value="subject" placeholder="Subject">
@@ -57,6 +54,7 @@
                     <h3> @ticket.SubmittedBy</h3>
                     <h4 class="text-success"> Is resolved: </h4>
                     <h4>@ticket.IsResolved</h4>
+                    <InputCheckbox @bind-Value="ticketModel.IsResolved" />
 
                     @foreach (ResponseModel response in allResponses.Where(r => r.TicketId == ticket.Id)) // Ändra så det bara är response
                     {
@@ -69,6 +67,7 @@
         </div>
  
         }
+
         </div>
  @*    </div> *@
     
@@ -107,7 +106,7 @@ else
     private async Task HandleSubmit()
     {
         isLoading = true;
-        //Försök skapa en ny ticket.
+        //FÃ¶rsÃ¶k skapa en ny ticket.
         TicketModel newTicket = await ticketService.AddTicketAsync(ticketModel);
         if (newTicket != null)
         {
@@ -121,7 +120,7 @@ else
                         Name = subject.ToString()
                     });
             }
-            //Om tag redan finns, använd befintligt ID.
+            //Om tag redan finns, anvÃ¤nd befintligt ID.
 
             //Skapa en ticket tag
             TicketTag newTicketTag = new()
@@ -129,11 +128,10 @@ else
                     TicketId = newTicket.Id,
                     TagId = selectedTag.Id,
                 };
-            //Lägg sedan till i TicketTag
+            //LÃ¤gg sedan till i TicketTag
             TicketTag? addedTicketTag = await ticketTagService.AddTicketTagAsync(newTicketTag);
         }
         isLoading = false;
 
     }
-
 }

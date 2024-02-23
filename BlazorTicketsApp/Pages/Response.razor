@@ -6,21 +6,31 @@
 
 <h3>Would you like to responde?</h3>
 
+<!--Testing-->
+
 <div>
 
 	@if(ticket != null)
 	{
 		<h1>@ticket.Title</h1>
+		<h5 class="text-success"> Description: </h5>
+		<h3>@ticket.Description</h3>
+		<h3 class="text-success"> Submitted by:</h3>
+		<h3> @ticket.SubmittedBy</h3>
 		foreach(ResponseModel response in response)
 		{
+
 			<br />
-			<h2>Submitted by: @response.SubmittedBy</h2>
-			<h2>Response: @response.Response</h2>
+			<h2>Submitted by: @response.SubmittedBy</h2>	
+			<h2>Response: @response.Response</h2>	
+
 		}
+		<label>Issue resolved?</label>
+		<InputCheckbox>@ticket.IsResolved</InputCheckbox>
+
 	}
 	
 </div>
-
 
 <EditForm Model="NewResponse" OnValidSubmit="HandleSubmit">
 	<DataAnnotationsValidator />
@@ -28,13 +38,12 @@
 
 	<InputText @bind-Value="NewResponse.Response" placeholder="Response"></InputText>
 	<InputText @bind-Value="NewResponse.SubmittedBy" placeholder="Your name"></InputText>
-
-	<input class="btn btn-primary" type="submit" value="Submit">
+	<ButtonSubmit Title="Submit"></ButtonSubmit>
+	<!-- <input class="btn btn-primary" type="submit" value="Submit">-->
 </EditForm>
 
-
-
 @code {
+
 	[Parameter]
 	public int Id { get; set; }
 
@@ -45,16 +54,21 @@
 
 	protected override async Task OnParametersSetAsync()
 	{
-
 		ticket = await ticketService.GetTicketByIdAsync(Id);
 		response = await responseService.GetAllResponsesByTicketIdAsync(Id);
 		NewResponse.TicketId = Id;
 	}
 
-
 	private async Task HandleSubmit()
 	{
-		await responseService.AddResponseAsync(NewResponse);
-		response = await responseService.GetAllResponsesByTicketIdAsync(Id);
-     }
+		if(NewResponse != null)
+		{
+			await responseService.AddResponseAsync(NewResponse);
+			response = await responseService.GetAllResponsesByTicketIdAsync(Id);
+			NewResponse = new ResponseModel(); // Clear the form after submission
+		}
+
+	}
+
 }
+
