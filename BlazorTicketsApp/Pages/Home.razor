@@ -10,7 +10,13 @@
 
 <h1 class="text-center text-success">Tickets!</h1>
 
+<<<<<<< HEAD
 <input placeholder="Search by title" @bind="searchText" @bind:event="oninput" />
+=======
+
+<input placeholder="Search by title" @bind-value="searchText" @oninput="Search">
+
+>>>>>>> 05acb5fb675b479bfc84a644a8f92648be9c22e5
 
 
 <h1>Ticket!</h1>
@@ -101,7 +107,7 @@ else
     private async Task HandleSubmit()
     {
         isLoading = true;
-        //Försök skapa en ny ticket.
+        //FÃ¶rsÃ¶k skapa en ny ticket.
         TicketModel newTicket = await ticketService.AddTicketAsync(ticketModel);
         if (newTicket != null)
         {
@@ -115,7 +121,7 @@ else
                         Name = subject.ToString()
                     });
             }
-            //Om tag redan finns, använd befintligt ID.
+            //Om tag redan finns, anvÃ¤nd befintligt ID.
 
             //Skapa en ticket tag
             TicketTag newTicketTag = new()
@@ -123,11 +129,23 @@ else
                     TicketId = newTicket.Id,
                     TagId = selectedTag.Id,
                 };
-            //Lägg sedan till i TicketTag
+            //LÃ¤gg sedan till i TicketTag
             TicketTag? addedTicketTag = await ticketTagService.AddTicketTagAsync(newTicketTag);
         }
         isLoading = false;
 
     }
 
+<<<<<<< HEAD
+=======
+
+    private async Task Search(ChangeEventArgs e)
+    {
+        searchText = e.Value?.ToString() ?? "";
+        allTickets = await ticketService.GetAllTicketsAsync();
+        allTickets = allTickets.Where(t => t.Title.ToLower().Contains(searchText.ToLower())).ToList();
+    }
+
+
+>>>>>>> 05acb5fb675b479bfc84a644a8f92648be9c22e5
 }
