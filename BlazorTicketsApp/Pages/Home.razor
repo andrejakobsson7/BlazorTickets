@@ -58,6 +58,8 @@
                     <h4 class="text-success"> Is resolved: </h4>
                     <h4>@ticket.IsResolved</h4>
 
+
+
                     @foreach (ResponseModel response in allResponses.Where(r => r.TicketId == ticket.Id)) // Ändra så det bara är response
                     {
                         <h2 class="text-danger">Response:</h2>
@@ -65,12 +67,13 @@
                         <h4 class="text-danger">Submitted by:</h4>
                         <h4>@response.SubmittedBy</h4>
                     }
+
               </div> 
-        </div>
+            </div>
  
         }
-        </div>
- @*    </div> *@
+     </div>
+    
     
 }
 else
@@ -100,7 +103,7 @@ else
     {
         allTickets = await ticketService.GetAllTicketsAsync();
         allTags = await tagService.GetAllTagsAsync();
-        allResponses = await responseService.GetAllResponsesAsync();
+        // allResponses = await responseService.GetAllResponsesAsync();
 
     }
 

@@ -4,20 +4,25 @@
 @inject ITicketService ticketService
 @inject IResponseService responseService
 
-<h3>Would you like to responde?</h3>
+<h3 class="text-center text-success">Would you like to responde?</h3>
 
 <div>
-
+	 <div id="container">
+            <div class="ticket-problem">
 	@if(ticket != null)
 	{
 		<h1>@ticket.Title</h1>
 		foreach(ResponseModel response in response)
 		{
+			
 			<br />
 			<h2>Submitted by: @response.SubmittedBy</h2>
 			<h2>Response: @response.Response</h2>
+			
 		}
 	}
+		</div>
+	</div>
 	
 </div>
 
