@@ -1,4 +1,4 @@
-﻿git pull@page "/response/{id:int}"
+@page "/response/{id:int}"
 @using BlazorTicketsApp.Services
 @using Shared.Models
 @inject ITicketService ticketService
@@ -19,6 +19,7 @@
 		<h3> @ticket.SubmittedBy</h3>
 		foreach(ResponseModel response in response)
 		{
+
 			<br />
 			<h2>Submitted by: @response.SubmittedBy</h2>	
 			<h2>Response: @response.Response</h2>	
@@ -26,14 +27,14 @@
 		}
 
 	}
-
+	
 </div>
 
 <EditForm Model="NewResponse" OnValidSubmit="HandleSubmit">
 	<DataAnnotationsValidator />
 	<ValidationSummary />
 
-	<InputText @bind-Value="NewResponse.Response" placeholder="Respond"></InputText>
+	<InputText @bind-Value="NewResponse.Response" placeholder="Response"></InputText>
 	<InputText @bind-Value="NewResponse.SubmittedBy" placeholder="Your name"></InputText>
 
 	<input class="btn btn-primary" type="submit" value="Submit">
@@ -60,8 +61,12 @@
 	{
 		await responseService.AddResponseAsync(NewResponse);
 		response = await responseService.GetAllResponsesByTicketIdAsync(Id);
+
 		NewResponse = new ResponseModel(); // Clear the form after submission
 	}
 
-	}
+}
+
+
+
 
