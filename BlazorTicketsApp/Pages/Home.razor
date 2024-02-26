@@ -41,20 +41,20 @@
 
 @if (allTickets != null)
 {
-
-  @*   <div class="container"> *@
-    <div class="row">
-            @foreach (TicketModel ticket in FilteredTickets)
-       {
-           <div id="container">
-            <div class="ticket-problem">
-                    <a href="/response/@ticket.Id"><h1>@ticket.Title</h1></a>
-                    <h2 class="text-success"> Description: </h2>
-                    <h2>@ticket.Description</h2>
-                    <h3 class="text-success"> Submitted by:</h3>
-                    <h3> @ticket.SubmittedBy</h3>
-                    <h4 class="text-success"> Is resolved: </h4>
-                    <h4>@ticket.IsResolved</h4>
+@*   <div class="container"> *@
+	<div class="row">
+		@foreach (TicketModel ticket in FilteredTickets)
+		{
+			<div id="container">
+				<div class="ticket-problem">
+					<a href="/response/@ticket.Id"><h1>@ticket.Title</h1></a>
+					<h2 class="text-success"> Description: </h2>
+					<h2>@ticket.Description</h2>
+					<h3 class="text-success"> Submitted by:</h3>
+					<h3> @ticket.SubmittedBy</h3>
+					<h4 class="text-success"> Is resolved: </h4>
+					<h4>@ticket.IsResolved</h4>
+					<InputCheckbox @bind-Value="ticketModel.IsResolved" />
 
                     @foreach (ResponseModel response in ticket.Responses)
                     {
