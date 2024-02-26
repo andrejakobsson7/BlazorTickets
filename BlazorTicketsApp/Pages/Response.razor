@@ -19,11 +19,9 @@
 		<h3> @ticket.SubmittedBy</h3>
 		foreach(ResponseModel response in response)
 		{
-
 			<br />
 			<h2>Submitted by: @response.SubmittedBy</h2>	
 			<h2>Response: @response.Response</h2>	
-
 		}
 		<label>Issue resolved?</label>
 		<InputCheckbox>@ticket.IsResolved</InputCheckbox>
