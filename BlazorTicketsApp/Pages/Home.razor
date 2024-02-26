@@ -53,8 +53,15 @@
 					<h3 class="text-success"> Submitted by:</h3>
 					<h3> @ticket.SubmittedBy</h3>
 					<h4 class="text-success"> Is resolved: </h4>
-					<h4>@ticket.IsResolved</h4>
-					<InputCheckbox @bind-Value="ticketModel.IsResolved" />
+
+					@if(@ticket.IsResolved)
+					{
+						<h2>"This ticket is resolved"</h2>
+					}
+					else
+					{
+						<h2>"This ticket is not resolved"</h2>
+					}
 
 					@foreach (ResponseModel response in ticket.Responses) // Ändra så det bara är response
 					{
