@@ -43,14 +43,14 @@ namespace BlazorTicketsApp.Services
             throw new HttpRequestException();
         }
 
-        public async Task<ResponseModel?> AddResponseAsync(ResponseModel response)
+        public async Task<List<ResponseModel>?> AddResponseAsync(ResponseModel response)
         {
             var apiResponse = await Client.PostAsJsonAsync<ResponseModel>(Client.BaseAddress, response);
             if (apiResponse.IsSuccessStatusCode)
             {
                 string newResponseJson = await apiResponse.Content.ReadAsStringAsync();
-                ResponseModel? addedResponse = JsonConvert.DeserializeObject<ResponseModel>(newResponseJson);
-                return addedResponse;
+                List<ResponseModel>? allResponses = JsonConvert.DeserializeObject<List<ResponseModel>>(newResponseJson);
+                return allResponses;
             }
             return null;
         }
