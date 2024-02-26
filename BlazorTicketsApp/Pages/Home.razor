@@ -29,7 +29,7 @@
 
     <br />
     <h6>Subject</h6>
-    <InputSelect @bind-Value="subject" placeholder="Subject">
+    <InputSelect @bind-Value="ticketModel.TicketTags" placeholder="Subject">
         @foreach (var tag in Enum.GetValues(typeof(Tag)))
         {
             <option value="@tag">@tag</option>
@@ -56,7 +56,7 @@
                     <h4>@ticket.IsResolved</h4>
                     <InputCheckbox @bind-Value="ticketModel.IsResolved" />
 
-                    @foreach (ResponseModel response in allResponses.Where(r => r.TicketId == ticket.Id)) // Ändra så det bara är response
+                    @foreach (ResponseModel response in ticket.Responses)
                     {
                         <h2 class="text-danger">Response:</h2>
                         <h2>@response.Response</h2>
@@ -82,12 +82,11 @@ else
 
     private string searchText = "";
     private TicketModel ticketModel { get; set; } = new();
+    private TicketViewModel ticketViewModel { get; set; } = new();
     private Tag subject { get; set; }
 
     private List<TicketModel> allTickets;
     private List<TicketModel> filteredTickets;
-    private List<TagModel> allTags;
-    private List<ResponseModel> allResponses;
 
 
     List<TicketModel> FilteredTickets => allTickets.Where(t => t.Title.ToLower().Contains(searchText.ToLower())).ToList();
@@ -98,40 +97,36 @@ else
     protected override async Task OnInitializedAsync()
     {
         allTickets = await ticketService.GetAllTicketsAsync();
-        allTags = await tagService.GetAllTagsAsync();
-        allResponses = await responseService.GetAllResponsesAsync();
-
     }
 
     private async Task HandleSubmit()
     {
         isLoading = true;
-        //FÃ¶rsÃ¶k skapa en ny ticket.
+        //Try and create a new ticket.
         TicketModel newTicket = await ticketService.AddTicketAsync(ticketModel);
         if (newTicket != null)
         {
-            //Kolla om tag finns med detta namn i databasen
+            //Check if tag with that name exists in db.
             TagModel? selectedTag = await tagService.GetTagByNameAsync(subject.ToString());
-            //Om inte, skapa den och returnera den nya tagen.
-            if(selectedTag == null)
+            //If not, create a new one and save it to db.
+            if (selectedTag == null)
             {
                 selectedTag = await tagService.AddTagAsync(new TagModel()
                     {
                         Name = subject.ToString()
                     });
             }
-            //Om tag redan finns, anvÃ¤nd befintligt ID.
-
-            //Skapa en ticket tag
+            //If tag already exists, use it's ID.
+            //Create tickettag.
             TicketTag newTicketTag = new()
-                {
-                    TicketId = newTicket.Id,
-                    TagId = selectedTag.Id,
-                };
-            //LÃ¤gg sedan till i TicketTag
+            {
+                    TagId = selectedTag!.Id,
+                    TicketId = newTicket.Id
+            };
+            //Add to join table
             TicketTag? addedTicketTag = await ticketTagService.AddTicketTagAsync(newTicketTag);
-        }
         isLoading = false;
+        }
 
     }
 }

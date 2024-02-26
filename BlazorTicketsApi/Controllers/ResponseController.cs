@@ -54,7 +54,7 @@ namespace BlazorTicketsApi.Controllers
         [HttpPost]
         public async Task<IActionResult> AddResponseAsync(ResponseModel response)
         {
-            ResponseModel? newResponse = await _responseRepository.AddResponseAsync(response);
+            List<ResponseModel>? newResponse = await _responseRepository.AddResponseAsync(response);
             if (newResponse == null)
             {
                 return BadRequest();

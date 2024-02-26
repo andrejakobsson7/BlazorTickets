@@ -26,8 +26,9 @@
 
 		}
 		<label>Issue resolved?</label>
-		<InputCheckbox>@ticket.IsResolved</InputCheckbox>
-
+		<label>@ticket.IsResolved</label>
+@* 		<InputCheckbox>@ticket.IsResolved</InputCheckbox>
+ *@
 	}
 	
 </div>
@@ -55,7 +56,7 @@
 	protected override async Task OnParametersSetAsync()
 	{
 		ticket = await ticketService.GetTicketByIdAsync(Id);
-		response = await responseService.GetAllResponsesByTicketIdAsync(Id);
+		response = ticket.Responses;
 		NewResponse.TicketId = Id;
 	}
 
@@ -63,8 +64,7 @@
 	{
 		if(NewResponse != null)
 		{
-			await responseService.AddResponseAsync(NewResponse);
-			response = await responseService.GetAllResponsesByTicketIdAsync(Id);
+			response = await responseService.AddResponseAsync(NewResponse);
 			NewResponse = new ResponseModel(); // Clear the form after submission
 		}
 
